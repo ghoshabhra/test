@@ -1,0 +1,289 @@
+/*********************************************************************************
+
+   PROJECT:			CVDRIK1
+   FILE:			CVDRIKMisc.cpp
+   AUTHOR:			PRITHWIJIT GUHA
+   DATE:
+   DESCRIPTION:		CPP File for Miscelleneous Functions
+
+*********************************************************************************/
+
+
+/*************************** OTHER INCLUDE FILES *****************************/
+
+#include "CVDRIKMisc.h"
+
+#define EPSILON 0.0001
+#define PI 3.141593
+
+/*****************************************************************************/
+
+
+/******************************************************************************
+
+                                FUNCTIONS
+
+******************************************************************************/
+
+// Function for Constructing the Image Name for Frame Number Indexed Images
+// Inputs :-
+//			(char*) imgPath : The Image Path
+//			(char*) imgBaseName : The Image Base Name
+//			(int) imgIndx : The Image Index
+//			(char*) imgFormat : The Image Format
+//			(int) zeroPaddingFormatSize : The Size of the Zero Padding
+//			NOTE: This is Required to Zero Pad the Index e.g. f_9 becomes f_0009
+//			NOTE: For a Zero Padding Size of 4
+//			(int) maxZeroPaddingImgIndx : The Maximum Image Index for Zero Padding
+//			(char*) imgName : The Image Name
+// Outputs :-
+//			(unsigned char) errCode : The Error Code of Execution
+// Invoked As : errCode = constructImageName( imgPath , imgBaseName , imgIndx , imgFormat , zeroPaddingFormatSize , maxZeroPaddingImgIndx , imgName );
+unsigned char constructImageName( char* imgPath , char* imgBaseName , int imgIndx , char* imgFormat , int zeroPaddingFormatSize , int maxZeroPaddingImgIndx , char* imgName )
+{
+	// Check Inputs
+	if( ( imgIndx < 0 ) || ( zeroPaddingFormatSize < 0 ) || ( maxZeroPaddingImgIndx <= 0 ) )
+	{
+		// Error Code 1 : Invalid Inputs
+		return( 1 );
+	}
+
+	// Case-I : If Zero Padding is Required
+	if( zeroPaddingFormatSize > 0 )
+	{
+		// Create the Format String
+		char formatString[50];
+		sprintf( formatString , "%%s%%s%%0%dd.%%s" , zeroPaddingFormatSize );
+
+		//printf( "\n\nformatString = %s\n\n" , formatString ); getchar();
+
+		// Check If Image Index is Within Limits
+		if( imgIndx <= maxZeroPaddingImgIndx )
+		{
+			// Perform Zero Padding of Image Index in Image Name
+			sprintf( imgName , formatString , imgPath , imgBaseName , imgIndx , imgFormat );
+		}
+		// Otherwise...
+		else
+		{
+			// Construct the Image Name Without Zero Padding
+			sprintf( imgName , "%s%s%d.%s" , imgPath , imgBaseName , imgIndx , imgFormat );
+		}
+	}
+	// Case-II : If No Zero Padding is Required
+	else
+	{
+		// Construct the Image Name Without Zero Padding
+		sprintf( imgName , "%s%s%d.%s" , imgPath , imgBaseName , imgIndx , imgFormat );
+	}
+
+	// Error Code 0 : All Well, That Ends Well
+	return( 0 );
+}
+
+// Function for Pausing Code at Certain Steps
+// Inputs :-
+//			(float) stepNum : The Step Number to be Displayed
+// Outputs :-
+//			None
+// Invoked As : checkPoint( stepNum );
+void checkPoint( float stepNum )
+{
+	printf( "\n\n Paused At Step %f \n\n" , stepNum );
+	getchar();
+}
+
+// Function for Testing the Belongingness of a Pixel in an Image
+// Inputs :-
+//			(IplImage*) img : Pointer to the Image
+//			(int) x : The Pixel Abscissa
+//			(int) y : The Pixel Ordinate
+// Outputs :-
+//			(bool) isInsideVal : Returns TRUE if Pixel is Inside Image Region
+// Invoked As : isInsideVal = isInside( &img , x , y );
+bool isInside( IplImage* img , int x , int y )
+{
+	// Check for Image Allocation and Pixel Belongingness
+	if( ( img->imageSize <= 0 ) || ( x < 0 ) || ( x >= img->width ) || ( y < 0 ) || ( y >= img->height ) )
+	{
+		return( false );
+	}
+	else
+	{
+		return( true );
+	}
+}
+
+// Function for Testing the Belongingness of a Pixel in a Rectangular Region
+// Inputs :-
+//			(CvRect*) rect : Pointer to the Rectangle
+//			(int) x : The Pixel Abscissa
+//			(int) y : The Pixel Ordinate
+// Outputs :-
+//			(bool) isInsideVal : Returns TRUE if Pixel is Inside the Rectangle
+// Invoked As : isInsideVal = isInside( &rect , x , y );
+bool isInside( CvRect* rect , int x , int y )
+{
+	// Check for Rectangle Validity and Pixel Belongingness
+	int rightBotX = ( rect->x ) + ( rect->width );
+	int rightBotY = ( rect->y ) + ( rect->height );
+	if( ( rect->width <= 0 ) || ( rect->height <= 0 ) || ( x < ( rect->x ) ) || ( x > rightBotX ) || ( y < ( rect->y ) ) || ( y > rightBotY ) )
+	{
+		return( false );
+	}
+	else
+	{
+		return( true );
+	}
+}
+
+// Function for Testing the Belongingness of a Rectangular Region in an Image
+// Inputs :-
+//			(IplImage*) img : Pointer to the Image
+//			(CvRect*) rect : Pointer to the Rectangular Region
+// Outputs :-
+//			(bool) isInsideVal : Returns TRUE if Rectangle is Inside Image Region
+// Invoked As : isInsideVal = isInside( &img , &rect );
+bool isInside( IplImage* img , CvRect* rect )
+{
+	// Check for Image Allocation and Rectangle Validity
+	if( ( img->imageSize <= 0 ) || ( rect->width <= 0 ) || ( rect->height <= 0 ) )
+	{
+		return( false );
+	}
+
+	// Compute the Rectangle Corners
+	int rightBotX = ( rect->x ) + ( rect->width );
+	int rightBotY = ( rect->y ) + ( rect->height );
+
+	// Check for the Belongingness of the Rectangle COrners in the Image Region
+	if( ( ( rect->x ) < 0 ) || ( ( rect->x ) >= img->width ) || ( ( rect->y ) < 0 ) || ( ( rect->y ) >= img->height ) || ( rightBotX < 0 ) || ( rightBotX >= img->width ) || ( rightBotY < 0 ) || ( rightBotY >= img->height ) )
+	{
+		return( false );
+	}
+	else
+	{
+		return( true );
+	}
+}
+
+// Function for Sorting an Array in Ascending Order
+// NOTE : Simple Bubble Sort is Implemented Here
+// Inputs :-
+//          (float*) array : Array to be Sorted
+//          (int) arraySize : Size of Array to be Sorted
+//          (float*) sortedArray : Sorted Array in Ascending Order
+//          (int*) sortedIndxArray : Indices Associated to Original Array After Sorting
+// Outputs :-
+//          (unsigned char) errCode : The Error Code of Execution
+// Invoked as : errCode = sortAscOrder( array, arraySize, sortedArray, sortedIndxArray );
+
+
+unsigned char sortAscOrder( float* array, int arraySize, float* sortedArray, int* sortedIndxArray )
+{
+    // Check Inputs
+	if( arraySize <= 1 )
+	{
+		// Error Code 1 : Invalid Input
+		return( 1 );
+	}
+
+	// Initialising sortedArray and sortedIndxArray
+    for( int counter = 0 ; counter < arraySize ; ++counter )
+    {
+        sortedArray[counter] = array[counter];
+		sortedIndxArray[counter] = counter;
+    }
+
+    // Sorting through Bubble Sort
+    for( int sortCount = 0 ; sortCount < ( arraySize - 1 ) ; ++sortCount )
+    {
+        for( int counter = 0 ; counter < ( arraySize - 1 ) ; ++counter )
+        {
+            if( sortedArray[ counter ] > sortedArray[ counter + 1 ] )
+            {
+                float tempVal = sortedArray[ counter ];
+                int tmpIndx = sortedIndxArray[ counter ];
+                sortedArray[ counter ] = sortedArray[ counter + 1 ];
+                sortedIndxArray[ counter ] = sortedIndxArray[ counter + 1 ];
+                sortedArray[ counter + 1 ] = tempVal;
+                sortedIndxArray[ counter + 1 ] = tmpIndx;
+            }
+        }
+    }
+
+	// Error Code 0 : All Well, That Ends Well
+	return( 0 );
+}
+
+
+
+// Function for Generating Zero Mean and Unity Variance Gaussian Random Number
+// Inputs :-
+//			None
+// Outputs :-
+//			The Generated Random Number
+// Invoked As : randNum = randGauss();
+float randGauss()
+{
+	// Local Variables
+	static int next_gaussian = 0;
+  	static float saved_gaussian_value;
+  	float fac, rsq, v1, v2;
+	float eps = 0.000001;
+	float one_minus_eps = 1.0 - eps;
+
+    // Generating the Number
+  	if( next_gaussian == 0 )
+    {
+    	// Randomly Generate a Number Between ( 0 , 1 )
+		do
+        {
+      		v1 = 2.0 * ( drand48() ) - 1.0;
+      		v2 = 2.0 * ( drand48() ) - 1.0;
+      		rsq = ( v1 * v1 ) + ( v2 * v2 );
+    	}
+        while( ( rsq > one_minus_eps ) || ( fabs( rsq ) < eps ) );
+		
+		// Compute the Gaussian Random Number
+    	fac = sqrt( -( 2.0 * log( rsq ) ) / rsq );
+    	saved_gaussian_value = v1 * fac;
+    	next_gaussian = 1;
+    	return( v2 * fac );
+  	}
+    else
+    {
+    	next_gaussian = 0;
+    	return( saved_gaussian_value );
+  	}
+}
+
+// Function for Generating Negative of Image
+unsigned char getNegImage( IplImage* img , IplImage* negimg )
+{
+	int i,j ;
+	//Iplimage* negimg;
+	//int imgWidth = img->width ;
+	//int imgHeight = img->height ;
+	
+	/*unsigned char *N_Im , *Im ;
+	N_Im = (unsigned char*) negimg->imageData ;
+	Im =  (unsigned char*) img->imgData ;
+	*/
+	int a = -negimg->widthStep;
+	//int b = -img->widthStep ;
+
+	for( i=0; i<(img->height) ; i++)
+	{
+		a += negimg->widthStep ;
+		//b += img->widthStep ;
+	for( j=0 ; j<img->widthStep ; j+=3)
+	{
+             //negimg->imagedata[i]=255-(img->imageData[i])
+		negimg->imageData[a+j]     = 255 - img->imageData[a+j];
+		negimg->imageData[a+j+1]   = 255 - img->imageData[a+j+1];
+		negimg->imageData[a+j+2]   = 255 - img->imageData[a+j+2];
+	}
+	}
+	return (0);
+}// end getNegImage

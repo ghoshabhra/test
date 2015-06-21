@@ -1,0 +1,16 @@
+IMAGE_INFORMATION
+camIndx = -1
+imageWidth = 320
+imageHeight = 240
+dropFrameNum = 10
+IMAGE_FILE_INFORMATION
+showInputImage = 1
+waitKeyParam = 10
+saveInputImage = 1
+inputImagePath = /home/ghosh/Pictures
+inputImageBaseName = doorPeopleCounting_
+inputImageFormat = jpg
+imgStartNum = 1
+imgEndNum = 1000
+zeroPaddingFormatSize = 4
+maxZeroPaddingImgIndx = 999

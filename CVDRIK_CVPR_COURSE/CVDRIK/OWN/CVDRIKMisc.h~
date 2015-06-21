@@ -1,0 +1,118 @@
+/******************************************************************************
+
+   PROJECT:			CVDRIK1
+   FILE:			CVDRIKMisc.h
+   AUTHOR:			PRITHWIJIT GUHA
+   DATE:
+   DESCRIPTION:		Header for Miscelleneous Functions
+
+******************************************************************************/
+
+#ifndef __CVDRIKMISC_H__
+#define __CVDRIKMISC_H__
+
+/*************************** OTHER INCLUDE FILES *****************************/
+
+// Include Standard C/C++ Header Files Here
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+// Include OpenCV Header Files Here
+#include <cv.h>
+#include <highgui.h>
+#include <cvaux.h>
+#include <cxcore.h>
+
+// Include CVDRIK Header Files Here
+#include "../CVDRIKMultiChannelImage/CVDRIKMultiChannelImage.h"
+
+
+/*****************************************************************************/
+
+
+
+/******************************************************************************
+
+					MISCELLENEOUS PURPOSE FUNCTIONS
+
+******************************************************************************/
+
+// Function for Constructing the Image Name for Frame Number Indexed Images
+// Inputs :-
+//			(char*) imgPath : The Image Path
+//			(char*) imgBaseName : The Image Base Name
+//			(int) imgIndx : The Image Index
+//			(char*) imgFormat : The Image Format
+//			(int) zeroPaddingFormatSize : The Size of the Zero Padding
+//			NOTE: This is Required to Zero Pad the Index e.g. f_9 becomes f_0009
+//			NOTE: For a Zero Padding Size of 4
+//			(int) maxZeroPaddingImgIndx : The Maximum Image Index for Zero Padding
+//			(char*) imgName : The Image Name
+// Outputs :-
+//			(unsigned char) errCode : The Error Code of Execution
+// Invoked As : errCode = constructImageName( imgPath , imgBaseName , imgIndx , imgFormat , zeroPaddingFormatSize , maxZeroPaddingImgIndx , imgName );
+unsigned char constructImageName( char* imgPath , char* imgBaseName , int imgIndx , char* imgFormat , int zeroPaddingFormatSize , int maxZeroPaddingImgIndx , char* imgName );
+
+// Function for Pausing Code at Certain Steps
+// Inputs :-
+//			(float) stepNum : The Step Number to be Displayed
+// Outputs :-
+//			None
+// Invoked As : checkPoint( stepNum );
+void checkPoint( float stepNum );
+
+// Function for Testing the Belongingness of a Pixel in an Image
+// Inputs :-
+//			(IplImage*) img : Pointer to the Image
+//			(int) x : The Pixel Abscissa
+//			(int) y : The Pixel Ordinate
+// Outputs :-
+//			(bool) isInsideVal : Returns TRUE if Pixel is Inside Image Region
+// Invoked As : isInsideVal = isInside( &img , x , y );
+bool isInside( IplImage* img , int x , int y );
+
+// Function for Testing the Belongingness of a Pixel in a Rectangular Region
+// Inputs :-
+//			(CvRect*) rect : Pointer to the Rectangle
+//			(int) x : The Pixel Abscissa
+//			(int) y : The Pixel Ordinate
+// Outputs :-
+//			(bool) isInsideVal : Returns TRUE if Pixel is Inside the Rectangle
+// Invoked As : isInsideVal = isInside( &rect , x , y );
+bool isInside( CvRect* rect , int x , int y );
+
+// Function for Testing the Belongingness of a Rectangular Region in an Image
+// Inputs :-
+//			(IplImage*) img : Pointer to the Image
+//			(CvRect*) rect : Pointer to the Rectangular Region
+// Outputs :-
+//			(bool) isInsideVal : Returns TRUE if Rectangle is Inside Image Region
+// Invoked As : isInsideVal = isInside( &img , &rect );
+bool isInside( IplImage* img , CvRect* rect );
+
+// Function for Sorting an Array in Ascending Order
+// NOTE : Simple Bubble Sort is Implemented Here
+// Inputs :-
+//          (float*) array : Array to be Sorted
+//          (int) arraySize : Size of Array to be Sorted
+//          (float*) sortedArray : Sorted Array in Ascending Order
+//          (int*) sortedIndxArray : Indices Associated to Original Array After Sorting
+// Outputs :-
+//          (unsigned char) errCode : The Error Code of Execution
+// Invoked as : errCode = sortAscOrder( array, arraySize, sortedArray, sortedIndxArray );
+unsigned char sortAscOrder( float* array, int arraySize, float* sortedArray, int* sortedIndxArray );
+
+// Function for Generating Zero Mean and Unity Variance Gaussian Random Number
+// Inputs :-
+//			None
+// Outputs :-
+//			The Generated Random Number
+// Invoked As : randNum = randGauss();
+float randGauss();
+
+// Function for Genarating Negative of Image
+void getNegImage( IplImage* img);
+
+#endif

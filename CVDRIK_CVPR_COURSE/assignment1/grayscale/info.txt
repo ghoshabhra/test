@@ -1,0 +1,8 @@
+IMAGE_FILE_INFORMATION
+inputImagePath = /home/ghosh/Pictures/
+inputImageBaseName = test
+inputImageFormat = jpg
+imageStartNum = 2
+imageEndNum = 1451
+zeroPaddingFormatSize = 4
+maxZeroPaddingImgIndx = 999

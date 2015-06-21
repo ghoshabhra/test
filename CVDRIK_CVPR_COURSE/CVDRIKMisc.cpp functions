@@ -1,0 +1,16 @@
+CVDRIKMisc.cpp functions
+
+1. sortAscOrder // understood
+//bubble-sort used
+
+2. float randGauss // Search internet how to generate a Zero Mean and Unity Variance Gaussian Random Number
+
+3. getNegImage // what is negative image
+
+4. constructImageName
+
+5. checkPoint
+
+6. isInside( IplImage* img , int x , int y );
+
+7. 

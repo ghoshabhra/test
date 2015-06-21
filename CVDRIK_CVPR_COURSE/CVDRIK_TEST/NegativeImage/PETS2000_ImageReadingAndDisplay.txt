@@ -1,0 +1,8 @@
+IMAGE_FILE_INFORMATION
+inputImagePath = /home/ghosh/Documents/CVDRIK_CVPR_COURSE/PETS2000/Images/
+inputImageBaseName = test
+inputImageFormat = bmp
+imageStartNum = 1
+imageEndNum = 1451
+zeroPaddingFormatSize = 4
+maxZeroPaddingImgIndx = 999
